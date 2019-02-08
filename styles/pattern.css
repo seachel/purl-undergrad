@@ -1,0 +1,27 @@
+.pattern * { font : 20px overlockreg; }
+
+.patternname { font : 30px overlockblack; }
+.sectionname { font : 24px overlockbold; margin-top : 30px; }
+
+.caston, .bindoff, .join, .pickup { margin : 20px 0; }
+
+.body { margin : 10px 0 15px 0; }
+
+.row { margin : 5px 0; }
+
+.rowrepeat { margin : 20px 0; }
+.rowrepeat > * { padding-left : 10px; }
+
+.stitch { font-family : overlockit; }
+
+.stitchcount {  font : 16px overlockit; }
+
+.verification, .error, .warning { font : bold 16px arial; float : left; clear : left; margin-right : 5px; }
+.verification { color : purple; }
+.error { color : red; }
+.warning { color : yellow; }
+
+.ast-display { background-color : white; clear : both; display : none; visibility : hidden; }
+#ast1-display, #ast2-display { margin-bottom : 110px; }
+#ast3-display { margin-bottom : 110px; }
+

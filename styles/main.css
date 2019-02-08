@@ -1,0 +1,198 @@
+*
+{
+  margin : 0;
+  padding : 0;
+  border : 0;
+  box-sizing : border-box;
+}
+
+html, body { height : 100%; }
+
+html
+{
+  background-image : url("../img/knitting.png");
+  padding-top : 50px;
+}
+
+#header
+{
+  position : absolute;
+  top : 0;
+  left : 0;
+  right : 0;
+  text-align : center;
+  font : 25px overlockblackit;
+  height : 50px;
+}
+
+
+#left-content, #right-content
+{
+  width : 44%;
+  height : 100%;
+  min-width : 150px;
+  min-height : 300px;
+  padding : 10px;
+}
+
+#center-content { float : left; width : 12%; height : 100%; padding : 0px 0; }
+#center-content-wrapper { height : 100%; position : relative; }
+
+#left-content { float : left; }
+#right-content { float : right; }
+
+#left-content-wrapper, #right-content-wrapper
+{
+  width : 100%;
+  height : 100%;
+  box-shadow : 0px 1px 10px 1px #888888;
+}
+
+/*Left content*/
+
+#pattern-entry
+{
+  display : block;
+  width : 100%;
+  height : 100%;
+  padding : 10px;
+  background-color : #333333;
+  color : #E6E6E6;
+  box-shadow : inset 0px 1px 10px 1px black;
+  font : 16px convergence;
+  line-height : 150%;
+  letter-spacing : 1px;
+}
+
+@font-face { font-family : "shadows"; src: url("../res/ShadowsIntoLightTwo-Regular.ttf"); }
+@font-face { font-family : "sofia"; src: url("../res/Sofia-Regular.ttf"); }
+
+#entry-wrapper
+{
+  position : relative;
+  height : 85%;
+  padding-bottom : 80px;
+}
+
+#compile
+{
+  position : absolute;
+  bottom : 0;
+  width : 100%;
+}
+
+#compile input, #tests input
+{
+  color : white;
+  background-color : #6194FF;
+  border : 2px solid #286CFC;
+}
+
+#compile input:hover, #tests input:hover { background-color : #709eff; }
+
+#compile input:active, #tests input:active 
+{
+  box-shadow : inset 0px 0px 1px 1px #286CFC;
+}
+
+#compile input
+{
+  display : table;
+  margin : 0 auto;
+  padding : 5px 0;
+  width : 100%;
+  height : 80px;
+  font : 30px  overlockblackit;
+}
+
+#message-display
+{
+  width : 100%;
+  height : 15%;
+  min-height : 60px;
+  background-color : #DBDBDB;
+  border : 1px solid #CCCCCC;
+  overflow-y : auto;
+}
+
+ul#message-list li input
+{
+  white-space : normal;
+  width : 100%;
+  text-align : left;
+}
+
+#message-display .error-message { border : 1px solid red; }
+#message-display .warning-message { border : 1px solid yellow; }
+#message-display .verification-message { border : 1px solid purple; }
+
+/*Center content*/
+
+#tests-wrapper { height : 100%; padding : 10px 0; }
+#tests { width : 100%; height : 100%; margin : 0 auto; padding: 10px; overflow-y : scroll; box-shadow : inset 0px 0px 10px 1px #525252; }
+#tests::-webkit-scrollbar { display : none; }
+
+#tests input
+{
+  width : 100%;
+  min-height : 75px;
+  padding : 10px;
+  margin-bottom : 10px;
+  font : 20px overlockblackit;
+  white-space : normal;
+}
+
+.test, .pattern-example { visibility : hidden; display : none; }
+
+
+/*Right content*/
+
+#pattern-display
+{
+  width : 100%;
+  height : 100%;
+  overflow-y : auto;
+  padding : 10px 10px 0 10px;
+  background-color : white;
+  border : 1px solid #CCCCCC;
+}
+
+/*Other Styles*/
+
+.weave-shadow-top
+{
+	position : absolute;
+	width : 100%;
+	height: 10px;
+	z-index: 5;
+	border-bottom : 1px solid #b9b9b9;
+	-webkit-box-shadow : 0px 6px 10px -3px #525252;
+	box-shadow : 0px 6px 10px -3px #525252;
+}
+
+.weave-shadow-bottom
+{
+	position : absolute;
+	width : 100%;
+	height: 10px;
+	bottom: 0%;
+	z-index: 5;
+	border-bottom : 1px solid #b9b9b9;
+	-webkit-box-shadow: 0px -6px 10px -3px #525252;
+	box-shadow: 0px -6px 10px -3px #525252;
+}
+
+/*Fonts*/
+
+@font-face { font-family : "artifica"; 	src: url("../res/Artifika-Regular.ttf"); }
+@font-face { font-family : "delius"; src: url("../res/Delius-Regular.ttf"); }
+@font-face { font-family : "novacut"; src: url("../res/NovaCut.ttf"); }
+@font-face { font-family : "novaslim"; src: url("../res/NovaSlim.ttf"); }
+@font-face { font-family : "radley"; src: url("../res/Radley-Italic.ttf"); }
+@font-face { font-family : "convergence"; src: url("../res/Convergence-Regular.ttf"); }
+@font-face { font-family : "overlockreg"; src: url("../res/Overlock-Regular.ttf"); }
+@font-face { font-family : "overlockblackit"; src: url("../res/Overlock-BlackItalic.ttf"); }
+@font-face { font-family : "overlockit"; src: url("../res/Overlock-Italic.ttf"); }
+@font-face { font-family : "overlockblack"; src: url("../res/Overlock-Black.ttf"); }
+@font-face { font-family : "overlockbold"; src: url("../res/Overlock-Bold.ttf"); }
+@font-face { font-family : "novaround"; src: url("../res/NovaRound.ttf"); }

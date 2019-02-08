@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="styles/main.css"/>
+	<link rel="stylesheet" type="text/css" href="styles/pattern.css"/>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js">
+	</script>
+	<script type="text/javascript" src="util.js"></script>
+	<script type="text/javascript" src="lexer.js"></script>
+	<script type="text/javascript" src="parser.js"></script>
+	<script type="text/javascript" src="codegen.js"></script>
+	<script>
+	function loadTest(idStr){
+		$("#pattern-entry").val($(idStr).text().trim());
+	}
+	
+	function showMessages(msgArr) {
+	
+		for (var i = 0; i < msgArr.length; i++) {
+			var msgObj = msgArr[i];
+			var msg = [];
+			
+			if (msgObj.sectionName != null && msgObj.sectionName != "") {
+				msg.push("Section: \'" + msgObj.sectionName + "\'");
+			}
+			
+			if (msgObj.rowIndex > 0) {
+				msg.push("Row: " + msgObj.rowIndex);
+			}
+			
+			var cursorPos = 0;
+			if (msgObj.line != null) {
+				msg.push("Line: " + msgObj.line.num + ":" + msgObj.line.pos);
+				cursorPos = msgObj.line.charPos;
+			}
+			
+			msg.push(msgObj.message);
+			
+			var classStr = " class=\"" + msgObj.messageType + "\"";
+			var valueStr = " value=\"" + msg.join(", ") + "\"";
+			var onclick = " onclick=\"javascript:moveCursor(" + cursorPos + ");\"";
+			var tagStr = "<input type=\"button\"" + classStr  + valueStr + onclick + "/>";
+			
+			$("#message-display ul").append("<li>" + tagStr + "</li>");
+		}
+	}
+	
+	function moveCursor(pos) {
+		document.getElementById("pattern-entry").selectionStart = pos;
+		document.getElementById("pattern-entry").selectionEnd = pos;
+		$("#pattern-entry").focus();
+	}
+	
+	$(document).ready(function() {
+		$("#compile input").click(function() {
+			$("#pattern-display").empty();
+			$("#message-display ul").empty();
+			var root = Parser.Parse($("#pattern-entry").val())
+			
+			if (root.messages.length > 0) {
+				showMessages(root.messages);
+			}
+			var output = PatternTextWriterHTML.Generate(root);
+			$("#pattern-display").prepend(output);
+		});
+	});
+	</script>
+</head>
+
+<body>
+
+	<div id="header">
+		<h1>Purl</h1>
+	</div>
+	
+		<div id="left-content">
+			<div id="left-content-wrapper">
+				<div id="entry-wrapper">
+					<textarea id="pattern-entry" spellcheck="false">pattern "Example Pattern":
+section "This is a section of a pattern":
+CO 4.
+row : P, K, P, K.
+row : [P, K] 2.
+**
+row : *P, K; to end.
+repeat 2
+BO 4.
+					</textarea>
+					
+					<div id="compile">
+						<input type="button" value="Compile" />
+				</div>
+				</div>
+				
+				<div id="message-display">
+					<ul id="message-list"></ul> 
+				</div>
+			</div>
+		</div>
+		
+		<div id="center-content">
+			<div id="center-content-wrapper">
+				<div class="weave-shadow-top"></div>
+				<div class="weave-shadow-bottom"></div>
+				<div id="tests-wrapper">
+<div id="tests">
+
+<input type="button" value="Shawl" onclick="javascript:loadTest(test0);" />
+<div id="test0" class="pattern-example">
+sample shawlRep with m:
+row : K 2, YO, K m, YO, K, YO, K m, YO, K 2.
+row : K 2, *P; to last 2, K 2.
+row : K 2, YO, P m + 2, YO, K, YO, P m + 2, YO, K 2.
+row : K 2, *P; to last 2, K 2. 
+
+sample shawlBody with m
+| m > 10:
+shawlRep with m.
+| m <= 10:
+shawlRep with m.
+shawlBody with m + 4.
+
+pattern "Shawl":
+CO 7.
+shawlBody with 1.
+BO 39.
+</div>
+
+<input type="button" value="Market Bag" onclick="javascript:loadTest(test01);" />
+<div id="test01" class="pattern-example">
+sample circleX with n, max
+| n < max:
+rnd : [K, YO, K n, YO, K] 4.
+rnd : *K; to end.
+circleX with n + 2, max.
+
+sample diagonalLace with n:
+**
+rnd : *K2T, YO; to end.
+rnd : *K; to end.
+repeat n
+
+sample garterStitchCC with n, type
+| type = 0:
+**
+row CC : *K; to end.
+row CC : *P; to end.
+repeat n
+| type = 1:
+**
+rnd CC : *K; to end.
+rnd CC : *P; to end.
+repeat n
+
+pattern "Market Bag":
+section "Body":
+CO 8 circular.
+rnd : *K, YO, K; to end.
+rnd : *K; to end.
+circleX with 1, 23.
+diagonalLace with 30.
+garterStitchCC with 4, 1.
+BO 100.
+
+section "Handle":
+PU 10 from "Body top".
+garterStitchCC with 2, 0.
+row : K, K2T, K 4, K2T, K.
+garterStitchCC with 100, 0.
+row : K, M1, K 6, M1, K.
+garterStitchCC with 2, 0.
+Join 10 to "Body top".
+</div>
+
+<input type="button" value="Project Display Board" onclick="javascript:loadTest(test02);" />
+<div id="test02" class="pattern-example">
+sample edging with r:
+**
+row : *K; to end.
+repeat r
+
+sample seedStitchBordered with r:
+**
+row : K 2, *P, K; to last 3, P, K 2.
+repeat r
+
+pattern "Project Display Board":
+CO 79.
+edging with 4.
+seedStitchBordered with 70.
+edging with 4.
+BO 79.
+</div>
+
+<input type="button" value="Basic Stitches" onclick="javascript:loadTest(test1);" />
+<div id="test1" class="test">
+pattern "Basic Sts":
+CO 40.
+row : K 40.
+row : P 40.
+row : KB 40.
+row : PB 40.
+row : K1B 40.
+row : P1B 40.
+row : S 40.
+row : SK 40.
+row : SP 40.
+row : K2T 20.
+row : P2T 10.
+row : SSK 5.
+row : SSP 2, P.
+row : S, K, PSSO, K.
+row : K, YO, K.
+row : KFB 3.
+row : PFB 6.
+row : K, M1, K 11.
+row : K, M1L, K 12.
+row : K, M1R, K 13.
+BO 15.
+</div>
+
+<input type="button" value="Compound Stitch" onclick="javascript:loadTest(test2);" />
+<div id="test2" class="test">
+pattern "Compound Stitch Test":
+CO 20.
+row : &lt K, P &gt, K 19.
+BO 20.
+</div>
+
+<input type="button" value="Fixed Stitch Rep" onclick="javascript:loadTest(test3);" />
+<div id="test3" class="test">
+pattern "Fixed Stitch Repeat Test":
+CO 18.
+row : [K, P, K] 6.
+BO 18.
+</div>
+
+<input type="button" value="Undetermined Stitch Rep" onclick="javascript:loadTest(test4);" />
+<div id="test4" class="test">
+pattern "Undetermined Stitch Repeat Test":
+CO 100.
+row : *K, P; to end.
+row : K, *P; to last 1, K.
+BO 100.
+</div>
+
+<input type="button" value="Row Repeat" onclick="javascript:loadTest(test5);" />
+<div id="test5" class="test">
+pattern "Row Repeat Test":
+CO 10.
+**
+row : *K; to end.
+repeat 2
+BO 10.
+</div>
+
+<input type="button" value="Sections" onclick="javascript:loadTest(test6);" />
+<div id="test6" class="test">
+pattern "Section Test":
+section "first section":
+CO 20.
+row : K 20.
+BO 20.
+
+section "second section":
+CO 5.
+row : K, P 3, K.
+BO 5.
+</div>
+
+<input type="button" value="Sample" onclick="javascript:loadTest(test7);" />
+<div id="test7" class="test">
+sample stockinette with m, n:
+**
+row : K m.
+repeat n
+
+pattern "Sample Test":
+CO 20.
+stockinette with 20, 3.
+BO 20.
+</div>
+
+<input type="button" value="Sample Recursion" onclick="javascript:loadTest(test71);" />
+<div id="test71" class="test">
+sample recursiveSample with m, n
+| m <= n:
+row : P m, *K; to end. 
+recursiveSample with m + 1, n.
+| m > n:
+row : *K; to end.
+
+pattern "Sample Recursion":
+CO 20.
+recursiveSample with 1, 10.
+BO 20.
+</div>
+
+<input type="button" value="Sample Branch" onclick="javascript:loadTest(test72);" />
+<div id="test72" class="test">
+sample sampleBranch with m, n
+| m = 0:
+row : K n.
+| m > 0:
+row : P n.
+
+pattern "Branch Test":
+CO 4.
+sampleBranch with 0, 4.
+sampleBranch with 1, 4.
+BO 4.
+</div>
+
+<input type="button" value="Row Type" onclick="javascript:loadTest(test8);" />
+<div id="test8" class="test">
+pattern "Row Type Test":
+CO 20.
+rnd : K 20.
+row : P 20.
+BO 20.
+</div>
+
+<input type="button" value="Color Options" onclick="javascript:loadTest(test9);" />
+<div id="test9" class="test">
+pattern "Color Test":
+CO 20.
+row MC : K 20.
+row CC : P 20.
+BO 20.
+</div>
+
+<input type="button" value="Errors" onclick="javascript:loadTest(test10);" />
+<div id="test10" class="test">
+patern "Error Test":
+CO 20.
+row MC : K 20.
+row CC : P 19.
+row : knit
+BO 20.
+</div>
+</div>
+				</div>
+			</div>
+		</div>
+		
+		<div id="right-content">
+			<div id="right-content-wrapper">
+				<div id="pattern-display">
+					
+				</div>
+			</div>
+		</div>
+	
+	<div id="ast1-display" class="ast-display"></div>
+	<div id="ast2-display" class="ast-display"></div>
+	<div id="ast3-display" class="ast-display"></div>
+	
+	<div id="footer">
+	</div>
+	
+</body>
+</html>
+
